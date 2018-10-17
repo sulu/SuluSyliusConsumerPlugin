@@ -15,39 +15,21 @@ namespace Sulu\SyliusProducerPlugin\Producer;
 
 use Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\RemoveProductMessage;
 use Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\SynchronizeProductMessage;
-use Sulu\SyliusProducerPlugin\Producer\Serializer\ProductSerializerInterface;
 use Sylius\Component\Core\Model\ProductInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 
-class ProductMessageProducer implements ProductMessageProducerInterface
+class ProductMessageProducer extends BaseMessageProducer implements ProductMessageProducerInterface
 {
-    /**
-     * @var ProductSerializerInterface
-     */
-    private $productSerializer;
-
-    /**
-     * @var MessageBusInterface
-     */
-    private $messageBus;
-
-    public function __construct(ProductSerializerInterface $productSerializer, MessageBusInterface $messageBus)
-    {
-        $this->productSerializer = $productSerializer;
-        $this->messageBus = $messageBus;
-    }
-
     public function synchronize(ProductInterface $product): void
     {
-        $message = new SynchronizeProductMessage($product->getCode(), $this->productSerializer->serialize($product));
+        $message = new SynchronizeProductMessage($product->getCode(), $this->serialize($product));
 
-        $this->messageBus->dispatch($message);
+        $this->getMessageBus()->dispatch($message);
     }
 
     public function remove(ProductInterface $product): void
     {
         $message = new RemoveProductMessage($product->getCode());
 
-        $this->messageBus->dispatch($message);
+        $this->getMessageBus()->dispatch($message);
     }
 }

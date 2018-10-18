@@ -21,7 +21,13 @@ class ProductVariantMessageProducer extends BaseMessageProducer implements Produ
 {
     public function synchronize(ProductVariantInterface $productVariant): void
     {
-        $message = new SynchronizeProductVariantMessage($productVariant->getCode(), $this->serialize($productVariant));
+        $payload = $this->serialize($productVariant);
+
+        $message = new SynchronizeProductVariantMessage(
+            $productVariant->getProduct()->getCode(),
+            $productVariant->getCode(),
+            $payload
+        );
 
         $this->getMessageBus()->dispatch($message);
     }

@@ -18,6 +18,11 @@ class SynchronizeProductVariantMessage
     /**
      * @var string
      */
+    private $productCode;
+
+    /**
+     * @var string
+     */
     private $code;
 
     /**
@@ -25,10 +30,16 @@ class SynchronizeProductVariantMessage
      */
     private $payload;
 
-    public function __construct(string $code, array $payload)
+    public function __construct(string $productCode, string $code, array $payload)
     {
+        $this->productCode = $productCode;
         $this->code = $code;
         $this->payload = $payload;
+    }
+
+    public function getProductCode(): string
+    {
+        return $this->productCode;
     }
 
     public function getCode(): string

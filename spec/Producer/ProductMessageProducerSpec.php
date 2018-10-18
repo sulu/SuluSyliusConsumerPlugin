@@ -18,7 +18,6 @@ use Prophecy\Argument;
 use Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\RemoveProductMessage;
 use Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\SynchronizeProductMessage;
 use Sulu\SyliusProducerPlugin\Producer\ProductMessageProducer;
-use Sulu\SyliusProducerPlugin\Producer\Serializer\ProductSerializerInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 

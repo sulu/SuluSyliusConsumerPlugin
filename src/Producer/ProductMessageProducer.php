@@ -41,8 +41,10 @@ class ProductMessageProducer extends BaseMessageProducer implements ProductMessa
         $message = new SynchronizeProductMessage($product->getCode(), $payload);
         $this->getMessageBus()->dispatch($message);
 
-        foreach ($product->getVariants() as $variant) {
-            $this->productVariantMessageProducer->synchronize($variant);
+        if ($product->isSimple()) {
+            foreach ($product->getVariants() as $variant) {
+                $this->productVariantMessageProducer->synchronize($variant);
+            }
         }
     }
 

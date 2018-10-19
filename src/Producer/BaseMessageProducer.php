@@ -40,12 +40,10 @@ abstract class BaseMessageProducer
         $serializationContext = new SerializationContext();
         $serializationContext->setGroups(['Default', 'Detailed']);
 
-        $productData = json_decode(
+        return json_decode(
             $this->serializer->serialize($object, 'json', $serializationContext),
             true
         );
-
-        return $productData;
     }
 
     protected function getMessageBus(): MessageBusInterface

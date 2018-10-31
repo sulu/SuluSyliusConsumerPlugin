@@ -21,8 +21,18 @@ class TaxonMessageProducer extends BaseMessageProducer implements TaxonMessagePr
 {
     public function synchronize(TaxonInterface $taxon): void
     {
-        $payload = $this->serialize($taxon);
-        $message = new SynchronizeTaxonMessage($taxon->getId(), $payload);
+        $root = null;
+        while (!$root) {
+            if ($taxon->getParent()) {
+                $taxon = $taxon->getParent();
+
+                continue;
+            }
+
+            $root = $taxon;
+        }
+        $payload = $this->serialize($root);
+        $message = new SynchronizeTaxonMessage($root->getId(), $payload);
         $this->getMessageBus()->dispatch($message);
     }
 

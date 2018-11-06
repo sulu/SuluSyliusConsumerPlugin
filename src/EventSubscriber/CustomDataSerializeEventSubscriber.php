@@ -16,9 +16,9 @@ namespace Sulu\SyliusProducerPlugin\EventSubscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use Sulu\SyliusProducerPlugin\Producer\AdditionalDataInterface;
+use Sulu\SyliusProducerPlugin\Model\CustomDataInterface;
 
-class AdditionalDataSerializeEventSubscriber implements EventSubscriberInterface
+class CustomDataSerializeEventSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {
@@ -34,10 +34,15 @@ class AdditionalDataSerializeEventSubscriber implements EventSubscriberInterface
     public function onPostSerialize(ObjectEvent $event): void
     {
         $object = $event->getObject();
-        if (!$object instanceof AdditionalDataInterface) {
+        if ($event->getContext()->hasAttribute('groups') && !$object instanceof CustomDataInterface) {
             return;
         }
 
-        $event->getVisitor()->setData('additionalData', $object->getAdditionalData());
+        $groups = $event->getContext()->getAttribute('groups');
+        if (!in_array('CustomData', $groups)) {
+            return;
+        }
+
+        $event->getVisitor()->setData('customData', $object->getCustomData());
     }
 }

@@ -11,9 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\SyliusProducerPlugin\Producer;
+namespace Sulu\SyliusProducerPlugin\Model;
 
-interface AdditionalDataInterface
+interface CustomDataInterface
 {
-    public function getAdditionalData(): array;
+    public function getCustomData(): array;
 }

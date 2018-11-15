@@ -1,0 +1,3 @@
+sylius_sulu_admin_api_login:
+    type: rest
+    resource: Sulu\SyliusProducerPlugin\Controller\SuluUserController

@@ -42,5 +42,13 @@
         <service id="Sulu\SyliusProducerPlugin\EventSubscriber\CustomDataSerializeEventSubscriber">
             <tag name="jms_serializer.event_subscriber"/>
         </service>
+
+        <service id="Sulu\SyliusProducerPlugin\Controller\SuluUserController">
+            <argument type="service" id="sylius.canonicalizer"/>
+            <argument type="service" id="sylius.security.password_encoder"/>
+            <argument type="service" id="sylius.repository.customer"/>
+
+            <tag name="controller.service_arguments" />
+        </service>
     </services>
 </container>

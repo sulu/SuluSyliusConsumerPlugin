@@ -13,19 +13,14 @@ declare(strict_types=1);
 
 namespace Sulu\SyliusProducerPlugin\Controller;
 
-use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\View\View;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-/**
- * @Rest\RouteResource("sulu-user")
- * @Rest\NamePrefix("sulu_sylius_api_")
- */
-class SuluUserController extends FOSRestController
+class AuthenticationController extends Controller
 {
     /**
      * @var AuthenticationProviderInterface
@@ -38,7 +33,7 @@ class SuluUserController extends FOSRestController
         $this->authenticationProvider = $authenticationProvider;
     }
 
-    public function getAction(Request $request): Response
+    public function authenticateAction(Request $request, int $version): Response
     {
         $email = $request->get('email');
         $plainPassword = $request->get('password');
@@ -61,6 +56,6 @@ class SuluUserController extends FOSRestController
             ];
         }
 
-        return $this->getViewHandler()->handle(new View($data));
+        return new JsonResponse($data);
     }
 }

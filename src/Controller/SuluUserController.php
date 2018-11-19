@@ -21,6 +21,8 @@ use Sylius\Component\Core\Model\ShopUserInterface;
 use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Sylius\Component\User\Canonicalizer\CanonicalizerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
@@ -30,28 +32,14 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 class SuluUserController extends FOSRestController
 {
     /**
-     * @var CanonicalizerInterface
+     * @var AuthenticationProviderInterface
      */
-    private $canonicalizer;
-
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $encoderFactory;
-
-    /**
-     * @var CustomerRepositoryInterface
-     */
-    private $customerRepository;
+    private $authenticationProvider;
 
     public function __construct(
-        CanonicalizerInterface $canonicalizer,
-        EncoderFactoryInterface $encoderFactory,
-        CustomerRepositoryInterface $customerRepository
+        AuthenticationProviderInterface $authenticationProvider
     ) {
-        $this->canonicalizer = $canonicalizer;
-        $this->encoderFactory = $encoderFactory;
-        $this->customerRepository = $customerRepository;
+        $this->authenticationProvider = $authenticationProvider;
     }
 
     public function getAction(Request $request) {
@@ -60,8 +48,11 @@ class SuluUserController extends FOSRestController
 
         $data = null;
 
-        $user = $this->findUser($email, $plainPassword);
-        if ($user) {
+        $token = new UsernamePasswordToken($email, $plainPassword, 'shop');
+        $result = $this->authenticationProvider->authenticate($token);
+
+        if ($result) {
+            $user = $result->getUser();
             $data = [
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
@@ -74,38 +65,6 @@ class SuluUserController extends FOSRestController
         }
 
         return $this->getViewHandler()->handle(new View($data));
-    }
-
-    private function findUser(string $email, string $plainPassword): ?ShopUserInterface
-    {
-        $canonicalEmail = $this->canonicalizer->canonicalize($email);
-        /** @var CustomerInterface $customer */
-        $customer = $this->customerRepository->findOneBy(
-            [
-                'emailCanonical' => $canonicalEmail,
-            ]
-        );
-
-        if (!$customer) {
-            return null;
-        }
-
-        $user = $customer->getUser();
-        if (!$user) {
-            return null;
-        }
-
-        $encoder = $this->encoderFactory->getEncoder(get_class($user));
-        $validPassword = $encoder->isPasswordValid(
-            $user->getPassword(),
-            $plainPassword,
-            $user->getSalt()
-        );
-        if (!$validPassword) {
-            return null;
-        }
-
-        return $user;
     }
 
     public function tokenAction($userId)

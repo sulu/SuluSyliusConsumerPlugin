@@ -44,9 +44,7 @@
         </service>
 
         <service id="Sulu\SyliusProducerPlugin\Controller\SuluUserController">
-            <argument type="service" id="sylius.canonicalizer"/>
-            <argument type="service" id="security.encoder_factory"/>
-            <argument type="service" id="sylius.repository.customer"/>
+            <argument type="service" id="security.authentication.provider.dao.shop"/>
 
             <tag name="controller.service_arguments" />
         </service>

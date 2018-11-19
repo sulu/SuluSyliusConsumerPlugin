@@ -16,14 +16,10 @@ namespace Sulu\SyliusProducerPlugin\Controller;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
-use Sylius\Component\Core\Model\CustomerInterface;
-use Sylius\Component\Core\Model\ShopUserInterface;
-use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
-use Sylius\Component\User\Canonicalizer\CanonicalizerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * @Rest\RouteResource("sulu-user")
@@ -42,7 +38,8 @@ class SuluUserController extends FOSRestController
         $this->authenticationProvider = $authenticationProvider;
     }
 
-    public function getAction(Request $request) {
+    public function getAction(Request $request): Response
+    {
         $email = $request->get('email');
         $plainPassword = $request->get('password');
 
@@ -65,10 +62,5 @@ class SuluUserController extends FOSRestController
         }
 
         return $this->getViewHandler()->handle(new View($data));
-    }
-
-    public function tokenAction($userId)
-    {
-        // TODO: Implement it
     }
 }

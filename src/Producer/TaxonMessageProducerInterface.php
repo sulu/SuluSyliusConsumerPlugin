@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\SyliusProducerPlugin\Producer;
 
-use Sylius\Component\Taxonomy\Model\TaxonInterface;
+use Sylius\Component\Core\Model\TaxonInterface;
 
 interface TaxonMessageProducerInterface
 {

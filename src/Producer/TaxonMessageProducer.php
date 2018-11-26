@@ -15,7 +15,7 @@ namespace Sulu\SyliusProducerPlugin\Producer;
 
 use Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\RemoveTaxonMessage;
 use Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\SynchronizeTaxonMessage;
-use Sylius\Component\Taxonomy\Model\TaxonInterface;
+use Sylius\Component\Core\Model\TaxonInterface;
 
 class TaxonMessageProducer extends BaseMessageProducer implements TaxonMessageProducerInterface
 {

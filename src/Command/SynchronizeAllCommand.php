@@ -18,6 +18,7 @@ use Sulu\SyliusProducerPlugin\Producer\ProductMessageProducerInterface;
 use Sulu\SyliusProducerPlugin\Producer\ProductVariantMessageProducerInterface;
 use Sulu\SyliusProducerPlugin\Producer\TaxonMessageProducerInterface;
 use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -90,20 +91,24 @@ class SynchronizeAllCommand extends Command
         $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
         gc_enable();
 
-        //$this->syncTaxonTree($input, $output);
-        $this->syncProducts($input, $output);
+        $this->syncTaxonTree($output);
+        $this->syncProducts($output);
     }
 
-    private function syncTaxonTree(InputInterface $input, OutputInterface $output)
+    private function syncTaxonTree(OutputInterface $output)
     {
         $output->writeln('<info>Sync taxon tree</info>');
 
         foreach ($this->taxonRepository->findRootNodes() as $rootTaxon) {
+            if (!$rootTaxon instanceof TaxonInterface) {
+                continue;
+            }
+
             $this->taxonMessageProducer->synchronize($rootTaxon);
         }
     }
 
-    private function syncProducts(InputInterface $input, OutputInterface $output)
+    private function syncProducts(OutputInterface $output)
     {
         $output->writeln('<info>Sync products</info>');
 
@@ -123,9 +128,11 @@ class SynchronizeAllCommand extends Command
         $progressBar->start();
 
         $count = 0;
-        /** @var ProductInterface $product */
         while (($row = $iterableResult->next()) !== false) {
             $product = $row[0];
+            if (!$product instanceof ProductInterface) {
+                continue;
+            }
 
             $this->productMessageProducer->synchronize($product, false);
             foreach ($product->getVariants() as $variant) {

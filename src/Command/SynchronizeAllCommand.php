@@ -113,17 +113,16 @@ class SynchronizeAllCommand extends Command
             ->getQuery()
             ->getSingleScalarResult();
 
-        $progressBar = new ProgressBar($output, intval($productCount));
-        $progressBar->start();
-
         $query = $this->entityManager->createQueryBuilder()
             ->select('product')
             ->from($this->productRepository->getClassName(), 'product')
             ->getQuery();
         $iterableResult = $query->iterate();
 
-        $count = 0;
+        $progressBar = new ProgressBar($output, intval($productCount));
+        $progressBar->start();
 
+        $count = 0;
         /** @var ProductInterface $product */
         while (($row = $iterableResult->next()) !== false) {
             $product = $row[0];
@@ -133,13 +132,14 @@ class SynchronizeAllCommand extends Command
                 $this->productVariantMessageProducer->synchronize($variant);
             }
 
-            $progressBar->advance();
             $this->entityManager->detach($product);
             $count++;
             if ($count % self::BULK_SIZE === 0) {
                 $this->entityManager->clear();
                 gc_collect_cycles();
             }
+
+            $progressBar->advance();
         }
     }
 }

@@ -51,5 +51,16 @@
 
             <tag name="controller.service_arguments" />
         </service>
+
+        <service id="Sulu\SyliusProducerPlugin\Command\SynchronizeAllCommand">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="Sulu\SyliusProducerPlugin\Producer\TaxonMessageProducerInterface"/>
+            <argument type="service" id="Sulu\SyliusProducerPlugin\Producer\ProductMessageProducerInterface"/>
+            <argument type="service" id="Sulu\SyliusProducerPlugin\Producer\ProductVariantMessageProducerInterface"/>
+            <argument type="service" id="sylius.repository.taxon"/>
+            <argument type="service" id="sylius.repository.product"/>
+
+            <tag name="console.command" />
+        </service>
     </services>
 </container>

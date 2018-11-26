@@ -34,8 +34,6 @@ class TaxonMessageProducer extends BaseMessageProducer implements TaxonMessagePr
         $payload = $this->serialize($root);
         $message = new SynchronizeTaxonMessage($root->getId(), $payload);
         $this->getMessageBus()->dispatch($message);
-
-        unset($message);
     }
 
     public function remove(TaxonInterface $taxon): void

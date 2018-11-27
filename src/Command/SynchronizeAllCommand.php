@@ -18,8 +18,10 @@ use Sulu\SyliusProducerPlugin\Producer\ProductMessageProducerInterface;
 use Sulu\SyliusProducerPlugin\Producer\ProductVariantMessageProducerInterface;
 use Sulu\SyliusProducerPlugin\Producer\TaxonMessageProducerInterface;
 use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
+use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -60,13 +62,19 @@ class SynchronizeAllCommand extends Command
      */
     private $productRepository;
 
+    /**
+     * @var ProductVariantRepositoryInterface
+     */
+    private $productVariantRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         TaxonMessageProducerInterface $taxonMessageProducer,
         ProductMessageProducerInterface $productMessageProducer,
         ProductVariantMessageProducerInterface $productVariantMessageProducer,
         TaxonRepositoryInterface $taxonRepository,
-        ProductRepositoryInterface $productRepository
+        ProductRepositoryInterface $productRepository,
+        ProductVariantRepositoryInterface $productVariantRepository
     ) {
         parent::__construct();
 
@@ -76,6 +84,7 @@ class SynchronizeAllCommand extends Command
         $this->productVariantMessageProducer = $productVariantMessageProducer;
         $this->taxonRepository = $taxonRepository;
         $this->productRepository = $productRepository;
+        $this->productVariantRepository = $productVariantRepository;
     }
 
     protected function configure()
@@ -93,9 +102,10 @@ class SynchronizeAllCommand extends Command
 
         $this->syncTaxonTree($output);
         $this->syncProducts($output);
+        $this->syncProductVariants($output);
     }
 
-    private function syncTaxonTree(OutputInterface $output)
+    private function syncTaxonTree(OutputInterface $output): void
     {
         $output->writeln('<info>Sync taxon tree</info>');
 
@@ -108,11 +118,11 @@ class SynchronizeAllCommand extends Command
         }
     }
 
-    private function syncProducts(OutputInterface $output)
+    private function syncProducts(OutputInterface $output): void
     {
         $output->writeln('<info>Sync products</info>');
 
-        $productCount = $this->entityManager->createQueryBuilder()
+        $count = $this->entityManager->createQueryBuilder()
             ->select('count(product.id)')
             ->from($this->productRepository->getClassName(), 'product')
             ->getQuery()
@@ -124,10 +134,10 @@ class SynchronizeAllCommand extends Command
             ->getQuery();
         $iterableResult = $query->iterate();
 
-        $progressBar = new ProgressBar($output, intval($productCount));
+        $progressBar = new ProgressBar($output, intval($count));
         $progressBar->start();
 
-        $count = 0;
+        $processedItems = 0;
         while (($row = $iterableResult->next()) !== false) {
             $product = $row[0];
             if (!$product instanceof ProductInterface) {
@@ -135,13 +145,49 @@ class SynchronizeAllCommand extends Command
             }
 
             $this->productMessageProducer->synchronize($product, false);
-            foreach ($product->getVariants() as $variant) {
-                $this->productVariantMessageProducer->synchronize($variant);
-            }
 
             $this->entityManager->detach($product);
-            $count++;
-            if ($count % self::BULK_SIZE === 0) {
+            $processedItems++;
+            if ($processedItems % self::BULK_SIZE === 0) {
+                $this->entityManager->clear();
+                gc_collect_cycles();
+            }
+
+            $progressBar->advance();
+        }
+    }
+
+    private function syncProductVariants(OutputInterface $output): void
+    {
+        $output->writeln('<info>Sync product variants</info>');
+
+        $count = $this->entityManager->createQueryBuilder()
+            ->select('count(productVariant.id)')
+            ->from($this->productVariantRepository->getClassName(), 'productVariant')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $query = $this->entityManager->createQueryBuilder()
+            ->select('productVariant')
+            ->from($this->productVariantRepository->getClassName(), 'productVariant')
+            ->getQuery();
+        $iterableResult = $query->iterate();
+
+        $progressBar = new ProgressBar($output, intval($count));
+        $progressBar->start();
+
+        $processedItems = 0;
+        while (($row = $iterableResult->next()) !== false) {
+            $productVariant = $row[0];
+            if (!$productVariant instanceof ProductVariantInterface) {
+                continue;
+            }
+
+            $this->productVariantMessageProducer->synchronize($productVariant);
+
+            $this->entityManager->detach($productVariant);
+            $processedItems++;
+            if ($processedItems % self::BULK_SIZE === 0) {
                 $this->entityManager->clear();
                 gc_collect_cycles();
             }

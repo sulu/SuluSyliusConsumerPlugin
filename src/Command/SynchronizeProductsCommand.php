@@ -100,5 +100,7 @@ class SynchronizeProductsCommand extends BaseSynchronizeCommand
 
             $progressBar->advance();
         }
+
+        $progressBar->finish();
     }
 }

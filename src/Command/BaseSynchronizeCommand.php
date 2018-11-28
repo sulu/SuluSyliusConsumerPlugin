@@ -27,9 +27,8 @@ abstract class BaseSynchronizeCommand extends Command
      */
     private $entityManager;
 
-    public function __construct(
-        EntityManagerInterface $entityManager
-    ) {
+    public function __construct(EntityManagerInterface $entityManager)
+    {
         parent::__construct();
 
         $this->entityManager = $entityManager;

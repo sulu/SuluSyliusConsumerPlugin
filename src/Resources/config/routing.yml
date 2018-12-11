@@ -10,6 +10,19 @@ sylius_admin_api_order_index:
     type: sylius.resource_api
     prefix: /v{version}
 
+sylius_admin_api_product_attribute:
+    resource: |
+        identifier: code
+        alias: sylius.product_attribute
+        section: admin_api
+        except: ['create']
+        serialization_version: $version
+        criteria:
+            code: $code
+        grid: sylius_admin_api_product_attribute
+    type: sylius.resource_api
+    prefix: /v{version}
+
 sylius_sulu_admin_api_authenticate:
     controller: SuluSyliusProducerPlugin:Authentication:authenticate
     path: v{version}/authenticate

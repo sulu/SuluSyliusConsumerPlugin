@@ -11,3 +11,15 @@ framework:
             enabled: true
     serializer:
         enabled: true
+
+sylius_grid:
+    grids:
+        sylius_admin_api_product_attribute:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: "%sylius.model.product_attribute.class%"
+            filters:
+                code:
+                    type: string
+                    label: sylius.ui.code

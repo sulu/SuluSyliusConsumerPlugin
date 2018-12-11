@@ -10,6 +10,11 @@ sylius_admin_api_order_index:
     type: sylius.resource_api
     prefix: /v{version}
 
+# TODO: We can remove this when issue is fixed:
+# https://github.com/Sylius/Sylius/issues/10024
+# Currently we are overwriting the whole `product-attributes` API to add filter.
+# Copied from following file:
+# https://github.com/Sylius/Sylius/blob/master/src/Sylius/Bundle/AdminApiBundle/Resources/config/routing/product_attribute.yml#L4
 sylius_admin_api_product_attribute:
     resource: |
         identifier: code

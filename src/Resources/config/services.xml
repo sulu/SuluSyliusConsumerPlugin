@@ -63,6 +63,14 @@
             <tag name="controller.service_arguments" />
         </service>
 
+        <service id="Sulu\SyliusProducerPlugin\Controller\VerifyController">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="jms_serializer.serializer"/>
+            <argument type="service" id="sylius.repository.shop_user"/>
+
+            <tag name="controller.service_arguments" />
+        </service>
+
         <service id="Sulu\SyliusProducerPlugin\Command\SynchronizeTaxonCommand">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="Sulu\SyliusProducerPlugin\Producer\TaxonMessageProducerInterface"/>

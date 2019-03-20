@@ -21,3 +21,40 @@ sylius_grid:
                 code:
                     type: string
                     label: sylius.ui.code
+        sylius_admin_api_address:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: "%sylius.model.address.class%"
+            filters:
+                customerId:
+                    type: string
+                    options:
+                        fields: [customer]
+        sylius_admin_api_order:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: "%sylius.model.order.class%"
+                    repository:
+                        method: createListQueryBuilder
+            sorting:
+                number: desc
+            fields:
+                number:
+                    type: string
+                    path: .
+                    sortable: ~
+                date:
+                    type: datetime
+                    path: checkoutCompletedAt
+                    sortable: checkoutCompletedAt
+            filters:
+                customerId:
+                    type: string
+                    options:
+                        fields: [customer.id]
+                date:
+                    type: date
+                    options:
+                        field: checkoutCompletedAt

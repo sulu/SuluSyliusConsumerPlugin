@@ -28,16 +28,12 @@ final class AddressTypeExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if (!$options) {
-            return;
-        }
-
         if (!array_key_exists('customerField', $options) || true !== $options['customerField']) {
             return;
         }
 
-        $data = array_key_exists('data', $options) ? $options['data'] : null;
-        if ($data && $data instanceof AddressInterface && $data->getId()) {
+        $data = $options['data'] ?? null;
+        if ($data instanceof AddressInterface && $data->getId()) {
             return;
         }
 

@@ -6,7 +6,6 @@ sylius_admin_api_address:
         serialization_version: $version
         grid: sylius_admin_api_address
         form:
-            type: Sylius\Bundle\AddressingBundle\Form\Type\AddressType
             options:
                 customerField: true
     type: sylius.resource_api

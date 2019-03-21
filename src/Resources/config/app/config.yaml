@@ -20,7 +20,6 @@ sylius_grid:
             filters:
                 code:
                     type: string
-                    label: sylius.ui.code
         sylius_admin_api_address:
             driver:
                 name: doctrine/orm
@@ -45,10 +44,6 @@ sylius_grid:
                     type: string
                     path: .
                     sortable: ~
-                date:
-                    type: datetime
-                    path: checkoutCompletedAt
-                    sortable: checkoutCompletedAt
             filters:
                 customerId:
                     type: string

@@ -44,6 +44,8 @@ class AddressSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $event->getVisitor()->setData('company', $object->getCompany());
+        if (null !== $object->getCompany()) {
+            $event->getVisitor()->setData('company', $object->getCompany());
+        }
     }
 }

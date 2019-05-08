@@ -45,6 +45,8 @@ class OrderSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $event->getVisitor()->setData('notes', $object->getNotes());
+        if (null !== $object->getNotes()) {
+            $event->getVisitor()->setData('notes', $object->getNotes());
+        }
     }
 }

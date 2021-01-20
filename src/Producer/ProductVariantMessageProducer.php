@@ -29,8 +29,8 @@ class ProductVariantMessageProducer extends BaseMessageProducer implements Produ
         }
 
         $message = new SynchronizeProductVariantMessage(
-            $product->getCode(),
-            $productVariant->getCode(),
+            $product->getCode() ?? '',
+            $productVariant->getCode() ?? '',
             $payload
         );
 
@@ -39,7 +39,7 @@ class ProductVariantMessageProducer extends BaseMessageProducer implements Produ
 
     public function remove(ProductVariantInterface $productVariant): void
     {
-        $message = new RemoveProductVariantMessage($productVariant->getCode());
+        $message = new RemoveProductVariantMessage($productVariant->getCode() ?? '');
 
         $this->getMessageBus()->dispatch($message);
     }

@@ -41,6 +41,6 @@ abstract class BaseSynchronizeCommand extends Command
         $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
         gc_enable();
 
-        return 1;
+        return 0;
     }
 }

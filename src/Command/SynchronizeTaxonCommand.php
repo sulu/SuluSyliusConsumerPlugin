@@ -64,7 +64,7 @@ class SynchronizeTaxonCommand extends BaseSynchronizeCommand
 
         $this->syncTaxonTree($output);
 
-        return 1;
+        return 0;
     }
 
     private function syncTaxonTree(OutputInterface $output): void

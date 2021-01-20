@@ -50,7 +50,7 @@ class SynchronizeProductVariantsCommand extends BaseSynchronizeCommand
         $this->productVariantRepository = $productVariantRepository;
     }
 
-    protected function configure():void
+    protected function configure(): void
     {
         $this->setName('sulu-sylius:synchronize:product-variants')
             ->setDescription('Synchronize all product variants to Sulu');
@@ -62,7 +62,7 @@ class SynchronizeProductVariantsCommand extends BaseSynchronizeCommand
 
         $this->syncProductVariants($output);
 
-        return 1;
+        return 0;
     }
 
     private function syncProductVariants(OutputInterface $output): void

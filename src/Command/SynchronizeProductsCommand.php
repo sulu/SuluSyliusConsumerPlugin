@@ -62,7 +62,7 @@ class SynchronizeProductsCommand extends BaseSynchronizeCommand
 
         $this->syncProducts($output);
 
-        return 1;
+        return 0;
     }
 
     private function syncProducts(OutputInterface $output): void

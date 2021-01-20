@@ -62,7 +62,7 @@ class AuthenticationController extends Controller
 
             $customer = $user->getCustomer();
             if (!$customer) {
-                return new JsonResponse(null, 200, []);
+                return new JsonResponse(null, 401);
             }
 
             $serializationContext = new SerializationContext();

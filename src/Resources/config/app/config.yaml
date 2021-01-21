@@ -1,12 +1,12 @@
 framework:
     messenger:
         routing:
-            'Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\SynchronizeProductMessage': sulu_sylius_transport
-            'Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\SynchronizeProductVariantMessage': sulu_sylius_transport
-            'Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\SynchronizeTaxonMessage': sulu_sylius_transport
-            'Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\RemoveProductMessage': sulu_sylius_transport
-            'Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\RemoveProductVariantMessage': sulu_sylius_transport
-            'Sulu\Bundle\SyliusConsumerBundle\Model\Product\Message\RemoveTaxonMessage': sulu_sylius_transport
+            'Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeProductMessage': sulu_sylius_transport
+            'Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeProductVariantMessage': sulu_sylius_transport
+            'Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeTaxonMessage': sulu_sylius_transport
+            'Sulu\Bundle\SyliusConsumerBundle\Message\RemoveProductMessage': sulu_sylius_transport
+            'Sulu\Bundle\SyliusConsumerBundle\Message\RemoveProductVariantMessage': sulu_sylius_transport
+            'Sulu\Bundle\SyliusConsumerBundle\Message\RemoveTaxonMessage': sulu_sylius_transport
 
 # TODO: We can remove this wenn issue is fixed:
 # https://github.com/Sylius/Sylius/issues/10024

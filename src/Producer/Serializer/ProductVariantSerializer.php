@@ -11,43 +11,32 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\SyliusProducerPlugin\Producer;
+namespace Sulu\SyliusProducerPlugin\Producer\Serializer;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 
-abstract class BaseMessageProducer
+class ProductVariantSerializer implements ProductVariantSerializerInterface
 {
     /**
      * @var SerializerInterface
      */
     private $serializer;
 
-    /**
-     * @var MessageBusInterface
-     */
-    private $messageBus;
-
-    public function __construct(SerializerInterface $serializer, MessageBusInterface $messageBus)
+    public function __construct(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
-        $this->messageBus = $messageBus;
     }
 
-    protected function serialize(object $object): array
+    public function serialize(ProductVariantInterface $productVariant): array
     {
         $serializationContext = new SerializationContext();
         $serializationContext->setGroups(['Default', 'Detailed', 'CustomData']);
 
         return json_decode(
-            $this->serializer->serialize($object, 'json', $serializationContext),
+            $this->serializer->serialize($productVariant, 'json', $serializationContext),
             true
         );
-    }
-
-    protected function getMessageBus(): MessageBusInterface
-    {
-        return $this->messageBus;
     }
 }

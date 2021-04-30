@@ -16,6 +16,7 @@ namespace Sulu\SyliusProducerPlugin\EventSubscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\JsonSerializationVisitor;
 use Sylius\Component\Addressing\Model\AddressInterface;
 
 class AddressSerializeEventSubscriber implements EventSubscriberInterface
@@ -44,7 +45,10 @@ class AddressSerializeEventSubscriber implements EventSubscriberInterface
         }
 
         if (null !== $object->getCompany()) {
-            $event->getVisitor()->setData('company', $object->getCompany());
+            /** @var JsonSerializationVisitor $visitor */
+            $visitor = $event->getVisitor();
+
+            $visitor->setData('company', $object->getCompany());
         }
     }
 }

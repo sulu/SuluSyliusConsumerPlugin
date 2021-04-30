@@ -13,13 +13,12 @@ declare(strict_types=1);
 
 namespace spec\Sulu\SyliusProducerPlugin\Producer;
 
-use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Sulu\Bundle\SyliusConsumerBundle\Message\RemoveProductVariantMessage;
 use Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeProductVariantMessage;
 use Sulu\SyliusProducerPlugin\Producer\ProductVariantMessageProducer;
+use Sulu\SyliusProducerPlugin\Producer\Serializer\ProductVariantSerializerInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -28,7 +27,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class ProductVariantMessageProducerSpec extends ObjectBehavior
 {
     public function let(
-        SerializerInterface $serializer,
+        ProductVariantSerializerInterface $serializer,
         MessageBusInterface $messageBus
     ): void {
         $this->beConstructedWith($serializer, $messageBus);
@@ -40,7 +39,7 @@ class ProductVariantMessageProducerSpec extends ObjectBehavior
     }
 
     public function it_should_dispatch_synchronize_message(
-        SerializerInterface $serializer,
+        ProductVariantSerializerInterface $serializer,
         MessageBusInterface $messageBus,
         ProductVariantInterface $productVariant,
         ProductInterface $product
@@ -48,8 +47,8 @@ class ProductVariantMessageProducerSpec extends ObjectBehavior
         $productVariant->getCode()->willReturn('product-1-variant-0');
         $productVariant->getProduct()->willReturn($product);
         $product->getCode()->willReturn('product-1');
-        $serializer->serialize($productVariant, 'json', Argument::type(SerializationContext::class))
-            ->shouldBeCalled()->willReturn('{"code": "product-1"}');
+        $serializer->serialize($productVariant)
+            ->shouldBeCalled()->willReturn(['code' => 'product-1']);
 
         $messageBus->dispatch(
             Argument::that(

@@ -47,6 +47,7 @@ class ProductSerializer implements ProductSerializerInterface
             'images' => $this->getImages($product),
             'customData' => $this->getCustomData($product),
             'variants' => $this->getVariants($product),
+            'isSimple' => $product->isSimple(),
         ];
     }
 

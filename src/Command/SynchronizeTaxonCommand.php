@@ -49,7 +49,7 @@ class SynchronizeTaxonCommand extends BaseSynchronizeCommand
         $this->taxonRepository = $taxonRepository;
     }
 
-    protected function configure():void
+    protected function configure(): void
     {
         $this->setName('sulu-sylius:synchronize:taxon')
             ->setDescription('Synchronize taxon tree to Sulu');

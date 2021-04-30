@@ -15,13 +15,31 @@ namespace Sulu\SyliusProducerPlugin\Producer;
 
 use Sulu\Bundle\SyliusConsumerBundle\Message\RemoveProductVariantMessage;
 use Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeProductVariantMessage;
+use Sulu\SyliusProducerPlugin\Producer\Serializer\ProductVariantSerializerInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
-class ProductVariantMessageProducer extends BaseMessageProducer implements ProductVariantMessageProducerInterface
+class ProductVariantMessageProducer implements ProductVariantMessageProducerInterface
 {
+    /**
+     * @var ProductVariantSerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var MessageBusInterface
+     */
+    private $messageBus;
+
+    public function __construct(ProductVariantSerializerInterface $serializer, MessageBusInterface $messageBus)
+    {
+        $this->serializer = $serializer;
+        $this->messageBus = $messageBus;
+    }
+
     public function synchronize(ProductVariantInterface $productVariant): void
     {
-        $payload = $this->serialize($productVariant);
+        $payload = $this->serializer->serialize($productVariant);
 
         $product = $productVariant->getProduct();
         if (!$product) {
@@ -35,7 +53,7 @@ class ProductVariantMessageProducer extends BaseMessageProducer implements Produ
         }
 
         $message = new SynchronizeProductVariantMessage($code, $variantCode, $payload);
-        $this->getMessageBus()->dispatch($message);
+        $this->messageBus->dispatch($message);
     }
 
     public function remove(ProductVariantInterface $productVariant): void
@@ -46,6 +64,6 @@ class ProductVariantMessageProducer extends BaseMessageProducer implements Produ
         }
 
         $message = new RemoveProductVariantMessage($variantCode);
-        $this->getMessageBus()->dispatch($message);
+        $this->messageBus->dispatch($message);
     }
 }

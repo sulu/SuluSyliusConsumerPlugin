@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -39,7 +39,7 @@ class ProductEventSubscriber implements EventSubscriberInterface
         $this->messageProducer = $messageProducer;
     }
 
-    public function synchronize(GenericEvent $event):void
+    public function synchronize(GenericEvent $event): void
     {
         $product = $event->getSubject();
         if (!$product instanceof ProductInterface) {
@@ -49,7 +49,7 @@ class ProductEventSubscriber implements EventSubscriberInterface
         $this->messageProducer->synchronize($product);
     }
 
-    public function remove(GenericEvent $event):void
+    public function remove(GenericEvent $event): void
     {
         $product = $event->getSubject();
         if (!$product instanceof ProductInterface) {

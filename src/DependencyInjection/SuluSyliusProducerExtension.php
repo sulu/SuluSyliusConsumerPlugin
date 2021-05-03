@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 final class SuluSyliusProducerExtension extends Extension implements PrependExtensionInterface
 {
-    public function prepend(ContainerBuilder $container):void
+    public function prepend(ContainerBuilder $container): void
     {
         if ($container->hasExtension('framework')) {
             $container->prependExtensionConfig('framework', [

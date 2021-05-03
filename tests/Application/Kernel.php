@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Tests\Sulu\SyliusProducerPlugin\Application;
 
 use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
@@ -82,11 +91,11 @@ final class Kernel extends BaseKernel
 
     protected function getContainerLoader(ContainerInterface $container): LoaderInterface
     {
-        /** @var ContainerBuilder $container */
+        /* @var ContainerBuilder $container */
         Assert::isInstanceOf($container, ContainerBuilder::class);
 
         $locator = new FileLocator($this, $this->getRootDir() . '/Resources');
-        $resolver = new LoaderResolver(array(
+        $resolver = new LoaderResolver([
             new XmlFileLoader($container, $locator),
             new YamlFileLoader($container, $locator),
             new IniFileLoader($container, $locator),
@@ -94,7 +103,7 @@ final class Kernel extends BaseKernel
             new GlobFileLoader($container, $locator),
             new DirectoryLoader($container, $locator),
             new ClosureLoader($container),
-        ));
+        ]);
 
         return new DelegatingLoader($resolver);
     }

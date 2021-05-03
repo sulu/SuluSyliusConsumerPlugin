@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\SyliusProducerPlugin\Producer\Serializer;
 
-use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 
-interface ProductSerializerInterface
+interface ProductVariantSerializerInterface
 {
-    public function serialize(ProductInterface $product): array;
+    public function serialize(ProductVariantInterface $productVariant): array;
 }

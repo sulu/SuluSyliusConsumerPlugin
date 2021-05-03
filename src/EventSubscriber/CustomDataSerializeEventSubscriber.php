@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -16,6 +16,7 @@ namespace Sulu\SyliusProducerPlugin\EventSubscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\SyliusProducerPlugin\Model\CustomDataInterface;
 
 class CustomDataSerializeEventSubscriber implements EventSubscriberInterface
@@ -43,6 +44,9 @@ class CustomDataSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $event->getVisitor()->setData('customData', $object->getCustomData());
+        /** @var JsonSerializationVisitor $visitor */
+        $visitor = $event->getVisitor();
+
+        $visitor->setData('customData', $object->getCustomData());
     }
 }

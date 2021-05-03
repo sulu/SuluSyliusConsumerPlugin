@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -50,13 +50,13 @@ class SynchronizeProductsCommand extends BaseSynchronizeCommand
         $this->productRepository = $productRepository;
     }
 
-    protected function configure():void
+    protected function configure(): void
     {
         $this->setName('sulu-sylius:synchronize:products')
             ->setDescription('Synchronize all products to Sulu');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output):int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         parent::execute($input, $output);
 

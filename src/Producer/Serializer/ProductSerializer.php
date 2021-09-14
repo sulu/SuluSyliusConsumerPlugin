@@ -40,14 +40,15 @@ class ProductSerializer implements ProductSerializerInterface
             'id' => $product->getId(),
             'code' => $product->getCode(),
             'enabled' => $product->isEnabled(),
+            'isSimple' => $product->isSimple(),
+            'isConfigurable' => $product->isConfigurable(),
             'mainTaxonId' => $mainTaxon ? $mainTaxon->getId() : null,
             'productTaxons' => $this->getProductTaxons($product),
             'translations' => $this->getTranslations($product),
             'attributes' => $this->getAttributes($product),
             'images' => $this->getImages($product),
-            'customData' => $this->getCustomData($product),
             'variants' => $this->getVariants($product),
-            'isSimple' => $product->isSimple(),
+            'customData' => $this->getCustomData($product),
         ];
     }
 

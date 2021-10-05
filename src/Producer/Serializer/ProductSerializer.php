@@ -41,6 +41,7 @@ class ProductSerializer implements ProductSerializerInterface
             'code' => $product->getCode(),
             'enabled' => $product->isEnabled(),
             'mainTaxonId' => $mainTaxon ? $mainTaxon->getId() : null,
+            'mainTaxonCode' => $mainTaxon ? $mainTaxon->getCode() : null,
             'productTaxons' => $this->getProductTaxons($product),
             'translations' => $this->getTranslations($product),
             'attributes' => $this->getAttributes($product),
@@ -80,6 +81,7 @@ class ProductSerializer implements ProductSerializerInterface
             $productTaxons[] = [
                 'id' => $productTaxon->getId(),
                 'taxonId' => $taxon->getId(),
+                'taxonCode' => $taxon->getCode(),
                 'position' => $taxon->getPosition(),
                 'customData' => $this->getCustomData($productTaxon),
             ];

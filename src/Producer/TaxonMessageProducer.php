@@ -52,12 +52,13 @@ class TaxonMessageProducer implements TaxonMessageProducerInterface
             $root = $taxon;
         }
 
-        if (null === $root) {
-            return;
-        }
+        $this->synchronizeSingleTaxon($taxon);
+    }
 
-        $payload = $this->serialize($root);
-        $message = new SynchronizeTaxonMessage($root->getId(), $payload);
+    public function synchronizeSingleTaxon(TaxonInterface $taxon, bool $ignoreChildren = false): void
+    {
+        $payload = $this->serialize($taxon);
+        $message = new SynchronizeTaxonMessage($taxon->getId(), $payload, $ignoreChildren);
         $this->messageBus->dispatch($message);
     }
 

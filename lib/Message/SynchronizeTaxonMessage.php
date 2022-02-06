@@ -25,10 +25,16 @@ class SynchronizeTaxonMessage
      */
     private $payload;
 
-    public function __construct(int $id, array $payload)
+    /**
+     * @var bool
+     */
+    private $ignoreChildren;
+
+    public function __construct(int $id, array $payload, bool $ignoreChildren = false)
     {
         $this->id = $id;
         $this->payload = $payload;
+        $this->ignoreChildren = $ignoreChildren;
     }
 
     public function getId(): int
@@ -39,5 +45,10 @@ class SynchronizeTaxonMessage
     public function getPayload(): array
     {
         return $this->payload;
+    }
+
+    public function ignoreChildren(): bool
+    {
+        return $this->ignoreChildren;
     }
 }

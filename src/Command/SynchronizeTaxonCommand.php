@@ -71,12 +71,25 @@ class SynchronizeTaxonCommand extends BaseSynchronizeCommand
     {
         $output->writeln('<info>Sync taxon tree</info>');
 
+        $taxons = [];
         foreach ($this->taxonRepository->findRootNodes() as $rootTaxon) {
             if (!$rootTaxon instanceof TaxonInterface) {
                 continue;
             }
 
-            $this->taxonMessageProducer->synchronize($rootTaxon);
+            $this->extractChildrenFlat($rootTaxon, $taxons);
         }
+
+        $this->taxonMessageProducer->synchronize($taxons);
+    }
+
+    private function extractChildrenFlat(TaxonInterface $rootTaxon, array &$taxons): array
+    {
+        $taxons[] = $rootTaxon;
+        foreach ($rootTaxon->getChildren() as $childTaxon) {
+            $this->extractChildrenFlat($childTaxon, $taxons);
+        }
+
+        return $taxons;
     }
 }

@@ -52,7 +52,7 @@ class TaxonEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->messageProducer->synchronize($taxon);
+        $this->messageProducer->synchronize([$taxon]);
     }
 
     public function preRemove(GenericEvent $event): void

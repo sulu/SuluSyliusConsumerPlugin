@@ -3,7 +3,7 @@ framework:
         routing:
             'Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeProductMessage': sulu_sylius_transport
             'Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeProductVariantMessage': sulu_sylius_transport
-            'Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeTaxonMessage': sulu_sylius_transport
+            'Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeTaxonsMessage': sulu_sylius_transport
             'Sulu\Bundle\SyliusConsumerBundle\Message\RemoveProductMessage': sulu_sylius_transport
             'Sulu\Bundle\SyliusConsumerBundle\Message\RemoveProductVariantMessage': sulu_sylius_transport
             'Sulu\Bundle\SyliusConsumerBundle\Message\RemoveTaxonMessage': sulu_sylius_transport

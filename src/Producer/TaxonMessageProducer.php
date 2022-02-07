@@ -16,7 +16,7 @@ namespace Sulu\SyliusProducerPlugin\Producer;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\SyliusConsumerBundle\Message\RemoveTaxonMessage;
-use Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeTaxonMessage;
+use Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeTaxonsMessage;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -38,27 +38,14 @@ class TaxonMessageProducer implements TaxonMessageProducerInterface
         $this->messageBus = $messageBus;
     }
 
-    public function synchronize(TaxonInterface $taxon): void
+    public function synchronize(array $taxons): void
     {
-        $root = null;
-        while (null === $root) {
-            $parent = $taxon->getParent();
-            if (null !== $parent) {
-                $taxon = $parent;
+        $message = new SynchronizeTaxonsMessage(
+            array_map(function (TaxonInterface $taxon) {
+                return $this->serialize($taxon);
+            }, $taxons)
+        );
 
-                continue;
-            }
-
-            $root = $taxon;
-        }
-
-        $this->synchronizeSingleTaxon($taxon);
-    }
-
-    public function synchronizeSingleTaxon(TaxonInterface $taxon, bool $ignoreChildren = false): void
-    {
-        $payload = $this->serialize($taxon);
-        $message = new SynchronizeTaxonMessage($taxon->getId(), $payload, $ignoreChildren);
         $this->messageBus->dispatch($message);
     }
 
@@ -72,14 +59,14 @@ class TaxonMessageProducer implements TaxonMessageProducerInterface
     protected function serialize(object $object): array
     {
         $serializationContext = new SerializationContext();
-        $serializationContext->setGroups(['Default', 'Detailed', 'CustomData']);
+        $serializationContext->setGroups(['Default', 'Autocomplete', 'CustomData']);
 
         /** @var array $content */
         $content = \json_decode(
             $this->serializer->serialize($object, 'json', $serializationContext),
             true,
             512,
-            \JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR
         );
 
         return $content;

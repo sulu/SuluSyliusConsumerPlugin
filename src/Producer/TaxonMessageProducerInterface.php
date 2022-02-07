@@ -17,9 +17,10 @@ use Sylius\Component\Core\Model\TaxonInterface;
 
 interface TaxonMessageProducerInterface
 {
-    public function synchronize(TaxonInterface $taxon): void;
-
-    public function synchronizeSingleTaxon(TaxonInterface $taxon, bool $ignoreChildren = false): void;
+    /**
+     * @param TaxonInterface[] $taxons
+     */
+    public function synchronize(array $taxons): void;
 
     public function remove(int $id): void;
 }

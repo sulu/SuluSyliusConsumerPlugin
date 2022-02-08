@@ -35,9 +35,6 @@
             "Tests\\Sulu\\SyliusProducerPlugin\\": "tests/"
         }
     },
-    "autoload-dev": {
-        "classmap": ["tests/Application/Kernel.php"]
-    },
     "config": {
         "sort-packages": true
     },
@@ -51,19 +48,10 @@
         "post-create-project-cmd": [
             "php bin/create_node_symlink.php"
         ],
-        "initialize": [
-            "Tests/Application/console doctrine:database:create --if-not-exists",
-            "Tests/Application/console doctrine:schema:update --force",
-            "Tests/Application/console cache:clear"
-        ],
-        "test": [
-            "@phpunit"
-        ],
         "lint": [
             "@phpstan",
             "@php-cs"
         ],
-        "phpunit": "vendor/bin/phpunit",
         "phpstan": "vendor/bin/phpstan analyze -c ./phpstan.neon . -l 5",
         "php-cs": "vendor/bin/php-cs-fixer fix --verbose --diff --dry-run",
         "php-cs-fix": "vendor/bin/php-cs-fixer fix"

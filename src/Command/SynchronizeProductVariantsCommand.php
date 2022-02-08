@@ -81,7 +81,7 @@ class SynchronizeProductVariantsCommand extends BaseSynchronizeCommand
             ->getQuery();
         $iterableResult = $query->iterate();
 
-        $progressBar = new ProgressBar($output, intval($count));
+        $progressBar = new ProgressBar($output, \intval($count));
         $progressBar->start();
 
         $processedItems = 0;
@@ -97,7 +97,7 @@ class SynchronizeProductVariantsCommand extends BaseSynchronizeCommand
             ++$processedItems;
             if (0 === $processedItems % self::BULK_SIZE) {
                 $this->entityManager->clear();
-                gc_collect_cycles();
+                \gc_collect_cycles();
             }
 
             $progressBar->advance();

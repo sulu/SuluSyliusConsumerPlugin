@@ -141,7 +141,7 @@ class ProductSerializer implements ProductSerializerInterface
         $serializationContext = new SerializationContext();
         $serializationContext->setGroups(['Default', 'Detailed', 'CustomData']);
 
-        return json_decode(
+        return \json_decode(
             $this->serializer->serialize($product->getVariants()->getValues(), 'json', $serializationContext),
             true
         );

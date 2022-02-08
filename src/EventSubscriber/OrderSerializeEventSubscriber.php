@@ -40,7 +40,7 @@ class OrderSerializeEventSubscriber implements EventSubscriberInterface
         }
 
         $groups = $event->getContext()->getAttribute('groups');
-        if (!in_array('Detailed', $groups)) {
+        if (!\in_array('Detailed', $groups)) {
             return;
         }
 

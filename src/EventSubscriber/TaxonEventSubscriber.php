@@ -62,14 +62,14 @@ class TaxonEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->idsCache[spl_object_hash($taxon)] = $taxon->getId();
+        $this->idsCache[\spl_object_hash($taxon)] = $taxon->getId();
     }
 
     public function postRemove(GenericEvent $event): void
     {
         $taxon = $event->getSubject();
-        $hash = spl_object_hash($taxon);
-        if (!$taxon instanceof TaxonInterface || !array_key_exists($hash, $this->idsCache)) {
+        $hash = \spl_object_hash($taxon);
+        if (!$taxon instanceof TaxonInterface || !\array_key_exists($hash, $this->idsCache)) {
             return;
         }
 

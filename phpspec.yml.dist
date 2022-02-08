@@ -1,4 +1,0 @@
-suites:
-    main:
-        namespace: Sulu\SyliusProducerPlugin
-        psr4_prefix: Sulu\SyliusProducerPlugin

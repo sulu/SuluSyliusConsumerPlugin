@@ -40,7 +40,7 @@ class UserSerializeEventSubscriber implements EventSubscriberInterface
         }
 
         $groups = $event->getContext()->getAttribute('groups');
-        if (!in_array('Detailed', $groups)) {
+        if (!\in_array('Detailed', $groups)) {
             return;
         }
 
@@ -53,6 +53,6 @@ class UserSerializeEventSubscriber implements EventSubscriberInterface
 
     private function generateHash(UserInterface $user): string
     {
-        return sha1($user->getPassword() . $user->isAccountNonLocked() . $user->isEnabled() . $user->isAccountNonExpired() . $user->isCredentialsNonExpired() . $user->isVerified());
+        return \sha1($user->getPassword() . $user->isAccountNonLocked() . $user->isEnabled() . $user->isAccountNonExpired() . $user->isCredentialsNonExpired() . $user->isVerified());
     }
 }

@@ -39,7 +39,7 @@ abstract class BaseSynchronizeCommand extends Command
         // disable logger because of memory issues
         $this->entityManager->getConfiguration()->setSQLLogger(null);
         $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
-        gc_enable();
+        \gc_enable();
 
         return 0;
     }

@@ -60,7 +60,7 @@ class SynchronizeTaxonCommand extends BaseSynchronizeCommand
         // disable logger because of memory issues
         $this->entityManager->getConfiguration()->setSQLLogger(null);
         $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
-        gc_enable();
+        \gc_enable();
 
         $this->syncTaxonTree($output);
 

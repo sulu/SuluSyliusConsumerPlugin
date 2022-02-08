@@ -67,6 +67,7 @@ class TaxonEventSubscriber implements EventSubscriberInterface
 
     public function postRemove(GenericEvent $event): void
     {
+        /** @var object $taxon */
         $taxon = $event->getSubject();
         $hash = \spl_object_hash($taxon);
         if (!$taxon instanceof TaxonInterface || !\array_key_exists($hash, $this->idsCache)) {

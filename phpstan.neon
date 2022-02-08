@@ -1,9 +1,15 @@
 parameters:
+    paths:
+        - .
+    level: max
+    parallel:
+        processTimeout: 300.0
     reportUnmatchedIgnoredErrors: false
     checkMissingIterableValueType: false
 
-    excludes_analyse:
+    excludePaths:
         - %currentWorkingDirectory%/DependencyInjection/Configuration.php
+        - %currentWorkingDirectory%/var/*
         - %currentWorkingDirectory%/vendor/*
 
     ignoreErrors:

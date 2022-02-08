@@ -39,6 +39,7 @@ class UserSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var array $groups */
         $groups = $event->getContext()->getAttribute('groups');
         if (!\in_array('Detailed', $groups)) {
             return;

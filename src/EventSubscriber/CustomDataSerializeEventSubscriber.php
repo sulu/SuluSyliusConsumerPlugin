@@ -39,6 +39,7 @@ class CustomDataSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var array $groups */
         $groups = $event->getContext()->getAttribute('groups');
         if (!\in_array('CustomData', $groups)) {
             return;

@@ -34,9 +34,14 @@ class ProductVariantSerializer implements ProductVariantSerializerInterface
         $serializationContext = new SerializationContext();
         $serializationContext->setGroups(['Default', 'Detailed', 'CustomData']);
 
-        return json_decode(
+        /** @var array $content */
+        $content = \json_decode(
             $this->serializer->serialize($productVariant, 'json', $serializationContext),
-            true
+            true,
+            512,
+            \JSON_THROW_ON_ERROR
         );
+
+        return $content;
     }
 }

@@ -16,6 +16,8 @@ namespace Sulu\SyliusProducerPlugin\Producer\Serializer;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\SyliusProducerPlugin\Model\CustomDataInterface;
+use Sylius\Component\Attribute\Model\AttributeInterface;
+use Sylius\Component\Attribute\Model\AttributeTranslationInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductTranslationInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -44,7 +46,7 @@ class ProductSerializer implements ProductSerializerInterface
             'mainTaxonCode' => $mainTaxon ? $mainTaxon->getCode() : null,
             'productTaxons' => $this->getProductTaxons($product),
             'translations' => $this->getTranslations($product),
-            'attributes' => $this->getAttributes($product),
+            'attributeValues' => $this->getAttributeValues($product),
             'images' => $this->getImages($product),
             'customData' => $this->getCustomData($product),
             'variants' => $this->getVariants($product),
@@ -52,21 +54,28 @@ class ProductSerializer implements ProductSerializerInterface
         ];
     }
 
-    protected function getAttributes(ProductInterface $product): array
+    protected function getAttributeValues(ProductInterface $product): array
     {
-        $attributes = [];
-        foreach ($product->getAttributes() as $attribute) {
-            $attributes[] = [
-                'id' => $attribute->getId(),
-                'code' => $attribute->getCode(),
-                'type' => $attribute->getType(),
-                'localeCode' => $attribute->getLocaleCode(),
-                'value' => $attribute->getValue(),
-                'customData' => $this->getCustomData($attribute),
+        $attributeValues = [];
+        foreach ($product->getAttributes() as $attributeValue) {
+            /** @var AttributeInterface $attribute */
+            $attribute = $attributeValue->getAttribute();
+            $attributeValues[$attributeValue->getCode()] = [
+                'code' => $attributeValue->getCode(),
+                'value' => $attributeValue->getValue(),
+                'attribute' => [
+                    'id' => $attribute->getId(),
+                    'code' => $attribute->getCode(),
+                    'type' => $attribute->getType(),
+                    'translations' => $this->getAttributeTranslations($attribute),
+                    'configuration' => $attribute->getConfiguration(),
+                    'customData' => $this->getCustomData($attribute),
+                ],
+                'customData' => $this->getCustomData($attributeValue),
             ];
         }
 
-        return $attributes;
+        return \array_values($attributeValues);
     }
 
     protected function getProductTaxons(ProductInterface $product): array
@@ -103,6 +112,21 @@ class ProductSerializer implements ProductSerializerInterface
                 'shortDescription' => $translation->getShortDescription(),
                 'metaKeywords' => $translation->getMetaKeywords(),
                 'metaDescription' => $translation->getMetaDescription(),
+                'customData' => $this->getCustomData($translation),
+            ];
+        }
+
+        return $translations;
+    }
+
+    private function getAttributeTranslations(AttributeInterface $attribute): array
+    {
+        $translations = [];
+        /** @var AttributeTranslationInterface $translation */
+        foreach ($attribute->getTranslations() as $translation) {
+            $translations[] = [
+                'locale' => $translation->getLocale(),
+                'name' => $translation->getName(),
                 'customData' => $this->getCustomData($translation),
             ];
         }

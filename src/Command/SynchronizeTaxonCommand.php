@@ -15,7 +15,7 @@ namespace Sulu\SyliusProducerPlugin\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\SyliusProducerPlugin\Producer\TaxonMessageProducerInterface;
-use Sylius\Component\Core\Model\TaxonInterface;
+use Sylius\Component\Taxonomy\Model\TaxonInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

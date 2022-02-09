@@ -41,7 +41,7 @@ class TaxonMessageProducer implements TaxonMessageProducerInterface
     public function synchronize(array $taxons): void
     {
         $message = new SynchronizeTaxonsMessage(
-            array_map(function (TaxonInterface $taxon) {
+            \array_map(function(TaxonInterface $taxon) {
                 return $this->serialize($taxon);
             }, $taxons)
         );
@@ -66,7 +66,7 @@ class TaxonMessageProducer implements TaxonMessageProducerInterface
             $this->serializer->serialize($object, 'json', $serializationContext),
             true,
             512,
-            JSON_THROW_ON_ERROR
+            \JSON_THROW_ON_ERROR
         );
 
         return $content;

@@ -77,17 +77,17 @@ class SynchronizeTaxonCommand extends BaseSynchronizeCommand
                 continue;
             }
 
-            $this->extractChildrenFlat($rootTaxon, $taxons);
+            $taxons = \array_merge($taxons, $this->extractChildrenFlat($rootTaxon));
         }
 
         $this->taxonMessageProducer->synchronize($taxons);
     }
 
-    private function extractChildrenFlat(TaxonInterface $rootTaxon, array &$taxons): array
+    private function extractChildrenFlat(TaxonInterface $rootTaxon): array
     {
-        $taxons[] = $rootTaxon;
+        $taxons = [$rootTaxon];
         foreach ($rootTaxon->getChildren() as $childTaxon) {
-            $this->extractChildrenFlat($childTaxon, $taxons);
+            $taxons = \array_merge($taxons, $this->extractChildrenFlat($childTaxon));
         }
 
         return $taxons;

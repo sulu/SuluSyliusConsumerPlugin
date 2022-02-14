@@ -16,7 +16,7 @@ namespace Sulu\SyliusProducerPlugin\Producer;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\SyliusConsumerBundle\Message\RemoveTaxonMessage;
-use Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeTaxonMessage;
+use Sulu\Bundle\SyliusConsumerBundle\Message\SynchronizeTaxonsMessage;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -38,26 +38,14 @@ class TaxonMessageProducer implements TaxonMessageProducerInterface
         $this->messageBus = $messageBus;
     }
 
-    public function synchronize(TaxonInterface $taxon): void
+    public function synchronize(array $taxons): void
     {
-        $root = null;
-        while (null === $root) {
-            $parent = $taxon->getParent();
-            if (null !== $parent) {
-                $taxon = $parent;
+        $message = new SynchronizeTaxonsMessage(
+            \array_map(function(TaxonInterface $taxon) {
+                return $this->serialize($taxon);
+            }, $taxons)
+        );
 
-                continue;
-            }
-
-            $root = $taxon;
-        }
-
-        if (null === $root) {
-            return;
-        }
-
-        $payload = $this->serialize($root);
-        $message = new SynchronizeTaxonMessage($root->getId(), $payload);
         $this->messageBus->dispatch($message);
     }
 
@@ -71,7 +59,7 @@ class TaxonMessageProducer implements TaxonMessageProducerInterface
     protected function serialize(object $object): array
     {
         $serializationContext = new SerializationContext();
-        $serializationContext->setGroups(['Default', 'Detailed', 'CustomData']);
+        $serializationContext->setGroups(['Default', 'Autocomplete', 'CustomData']);
 
         /** @var array $content */
         $content = \json_decode(

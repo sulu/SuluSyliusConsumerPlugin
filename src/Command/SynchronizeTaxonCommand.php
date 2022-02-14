@@ -15,7 +15,7 @@ namespace Sulu\SyliusProducerPlugin\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\SyliusProducerPlugin\Producer\TaxonMessageProducerInterface;
-use Sylius\Component\Core\Model\TaxonInterface;
+use Sylius\Component\Taxonomy\Model\TaxonInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -71,12 +71,25 @@ class SynchronizeTaxonCommand extends BaseSynchronizeCommand
     {
         $output->writeln('<info>Sync taxon tree</info>');
 
+        $taxons = [];
         foreach ($this->taxonRepository->findRootNodes() as $rootTaxon) {
             if (!$rootTaxon instanceof TaxonInterface) {
                 continue;
             }
 
-            $this->taxonMessageProducer->synchronize($rootTaxon);
+            $taxons = \array_merge($taxons, $this->extractChildrenFlat($rootTaxon));
         }
+
+        $this->taxonMessageProducer->synchronize($taxons);
+    }
+
+    private function extractChildrenFlat(TaxonInterface $rootTaxon): array
+    {
+        $taxons = [$rootTaxon];
+        foreach ($rootTaxon->getChildren() as $childTaxon) {
+            $taxons = \array_merge($taxons, $this->extractChildrenFlat($childTaxon));
+        }
+
+        return $taxons;
     }
 }

@@ -60,13 +60,16 @@ class ProductSerializer implements ProductSerializerInterface
         foreach ($product->getAttributes() as $attributeValue) {
             /** @var AttributeInterface $attribute */
             $attribute = $attributeValue->getAttribute();
-            $attributeValues[$attributeValue->getCode()] = [
+            $key = \sprintf('%1$s|%2$s', $attributeValue->getCode(), $attributeValue->getLocaleCode() ?? '_null_');
+            $attributeValues[$key] = [
                 'code' => $attributeValue->getCode(),
+                'localeCode' => $attributeValue->getLocaleCode(),
                 'value' => $attributeValue->getValue(),
                 'attribute' => [
                     'id' => $attribute->getId(),
                     'code' => $attribute->getCode(),
                     'type' => $attribute->getType(),
+                    'translatable' => $attribute->isTranslatable(),
                     'translations' => $this->getAttributeTranslations($attribute),
                     'configuration' => $attribute->getConfiguration(),
                     'customData' => $this->getCustomData($attribute),

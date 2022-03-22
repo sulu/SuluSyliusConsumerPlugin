@@ -27,3 +27,6 @@ After
 // either were already synchronized or are also listed in the array
 $taxonMessageProducer->synchronize([$taxon1, $taxon2, $taxon3]);
 ```
+### Product attribute payload
+
+The product attribute payload has changed. It is now stored in `attributeValues` and its content is slightly different.

@@ -14,3 +14,6 @@ parameters:
 
     ignoreErrors:
         - '/Parameter #1 \$configuration of method Symfony\\Component\\DependencyInjection\\Extension\\Extension::processConfiguration\(\) expects Symfony\\Component\\Config\\Definition\\ConfigurationInterface, Symfony\\Component\\Config\\Definition\\ConfigurationInterface\|null given\./'
+        - '/Call to an undefined method Sylius\\Component\\User\\Model\\UserInterface\:\:isAccountNonExpired\(\)\./'
+        - '/Call to an undefined method Sylius\\Component\\User\\Model\\UserInterface\:\:isAccountNonLocked\(\)\./'
+        - '/Call to an undefined method Sylius\\Component\\User\\Model\\UserInterface\:\:isCredentialsNonExpired\(\)\./'

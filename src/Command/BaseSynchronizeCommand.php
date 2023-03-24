@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class BaseSynchronizeCommand extends Command
 {
-    const BULK_SIZE = 50;
+    public const BULK_SIZE = 50;
 
     /**
      * @var EntityManagerInterface

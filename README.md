@@ -1,6 +1,8 @@
 # SuluSyliusProducerPlugin
 
-[![Test workflow status](https://img.shields.io/github/workflow/status/sulu/SuluSyliusProducerPlugin/Build.svg?label=build)](https://github.com/sulu/SuluSyliusProducerPlugin/actions)
+<a href="https://github.com/sulu/SuluSyliusProducerPlugin/actions" target="_blank">
+    <img src="https://img.shields.io/github/actions/workflow/status/sulu/SuluSyliusProducerPlugin/test-application.yaml" alt="Test workflow status">
+</a>
 
 Producer for synchronization products with sulu.
 
@@ -25,7 +27,7 @@ composer require sulu/sylius-producer-plugin
 
 imports:
     - { resource: "@SuluSyliusProducerPlugin/Resources/config/app/config.yaml" }
-    
+
 framework:
     messenger:
         transports:

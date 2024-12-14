@@ -5,7 +5,6 @@ parameters:
     parallel:
         processTimeout: 300.0
     reportUnmatchedIgnoredErrors: false
-    checkMissingIterableValueType: false
 
     excludePaths:
         - %currentWorkingDirectory%/DependencyInjection/Configuration.php
@@ -17,3 +16,5 @@ parameters:
         - '/Call to an undefined method Sylius\\Component\\User\\Model\\UserInterface\:\:isAccountNonExpired\(\)\./'
         - '/Call to an undefined method Sylius\\Component\\User\\Model\\UserInterface\:\:isAccountNonLocked\(\)\./'
         - '/Call to an undefined method Sylius\\Component\\User\\Model\\UserInterface\:\:isCredentialsNonExpired\(\)\./'
+        -
+            identifier: missingType.iterableValue

@@ -23,31 +23,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SynchronizeProductsCommand extends BaseSynchronizeCommand
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var ProductMessageProducerInterface
-     */
-    private $productMessageProducer;
-
-    /**
-     * @var ProductRepositoryInterface
-     */
-    private $productRepository;
-
+    /** @param ProductRepositoryInterface<ProductInterface> $productRepository */
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ProductMessageProducerInterface $productMessageProducer,
-        ProductRepositoryInterface $productRepository
+        private EntityManagerInterface $entityManager,
+        private ProductMessageProducerInterface $productMessageProducer,
+        private ProductRepositoryInterface $productRepository,
     ) {
         parent::__construct($entityManager);
-
-        $this->entityManager = $entityManager;
-        $this->productMessageProducer = $productMessageProducer;
-        $this->productRepository = $productRepository;
     }
 
     protected function configure(): void

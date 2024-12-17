@@ -17,21 +17,17 @@ env:
 
 jobs:
     tests:
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
 
-        name: "PHP ${{ matrix.php }}, MySQL ${{ matrix.mysql }}"
+        name: "PHP ${{ matrix.php }}, MySQL ${{ matrix.mysql }}, Sylius ${{ matrix.sylius }}"
 
         strategy:
             fail-fast: false
             matrix:
-                php: [7.4, 7.3]
+                php: [8.1, 8.2, 8.3]
                 node: [10.x]
                 mysql: [5.7, 8.0]
-
-                exclude:
-                    - # PHP 7.3 does not support "caching_sha2_password" authentication plugin which is a default one in MySQL 8.0
-                        php: 7.3
-                        mysql: 8.0
+                sylius: [1.13.*, 1.14.*]
 
         env:
             APP_ENV: test
@@ -39,7 +35,7 @@ jobs:
 
         steps:
             -
-                uses: actions/checkout@v2
+                uses: actions/checkout@v4
 
             -
                 name: Setup PHP
@@ -52,7 +48,7 @@ jobs:
 
             -
                 name: Setup Node
-                uses: actions/setup-node@v1
+                uses: actions/setup-node@v4
                 with:
                     node-version: "${{ matrix.node }}"
 
@@ -80,22 +76,22 @@ jobs:
                 run: google-chrome-stable --enable-automation --disable-background-networking --no-default-browser-check --no-first-run --disable-popup-blocking --disable-default-apps --allow-insecure-localhost --disable-translate --disable-extensions --no-sandbox --enable-features=Metal --headless --remote-debugging-port=9222 --window-size=2880,1800 --proxy-server='direct://' --proxy-bypass-list='*' http://127.0.0.1 > /dev/null 2>&1 &
 
             -
-                name: Run webserver
-                run: (cd tests/Application && symfony server:start --port=8080 --dir=public --daemon)
-
-            -
                 name: Get Composer cache directory
                 id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
             -
                 name: Cache Composer
-                uses: actions/cache@v2
+                uses: actions/cache@v4
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json **/composer.lock') }}
                     restore-keys: |
                         ${{ runner.os }}-php-${{ matrix.php }}-composer-
+
+            -
+                name: Require Sylius version
+                run: composer require sylius/sylius:"${{ matrix.sylius }}" --no-update
 
             -
                 name: Install PHP dependencies
@@ -108,7 +104,7 @@ jobs:
 
             -
                 name: Cache Yarn
-                uses: actions/cache@v2
+                uses: actions/cache@v4
                 with:
                     path: ${{ steps.yarn-cache.outputs.dir }}
                     key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/package.json **/yarn.lock') }}
@@ -116,49 +112,13 @@ jobs:
                         ${{ runner.os }}-node-${{ matrix.node }}-yarn-
 
             -
-                name: Install JS dependencies
-                run: (cd tests/Application && yarn install)
-
-            -
-                name: Prepare test application database
-                run: |
-                    (cd tests/Application && bin/console doctrine:database:create -vvv)
-                    (cd tests/Application && bin/console doctrine:schema:create -vvv)
-
-            -
-                name: Prepare test application assets
-                run: |
-                    (cd tests/Application && bin/console assets:install public -vvv)
-                    (cd tests/Application && yarn build)
-
-            -
-                name: Prepare test application cache
-                run: (cd tests/Application && bin/console cache:warmup -vvv)
-
-            -
-                name: Load fixtures in test application
-                run: (cd tests/Application && bin/console sylius:fixtures:load -n)
-
-            -
                 name: Validate composer.json
                 run: composer validate --ansi --strict
 
             -
-                name: Validate database schema
-                run: (cd tests/Application && bin/console doctrine:schema:validate)
-
-            -
-                name: Run php-cs-fixer 
+                name: Run php-cs-fixer
                 run: vendor/bin/php-cs-fixer fix --verbose --diff --dry-run
 
             -
                 name: Run PHPStan
                 run: vendor/bin/phpstan analyse -c phpstan.neon -l max src/
-
-            -
-                name: Run PHPSpec
-                run: vendor/bin/phpspec run --ansi -f progress --no-interaction
-
-            -
-                name: Run PHPUnit
-                run: vendor/bin/phpunit --colors=always

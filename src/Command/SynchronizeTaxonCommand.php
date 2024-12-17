@@ -22,31 +22,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SynchronizeTaxonCommand extends BaseSynchronizeCommand
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var TaxonMessageProducerInterface
-     */
-    private $taxonMessageProducer;
-
-    /**
-     * @var TaxonRepositoryInterface
-     */
-    private $taxonRepository;
-
+    /** @param TaxonRepositoryInterface<TaxonInterface> $taxonRepository */
     public function __construct(
-        EntityManagerInterface $entityManager,
-        TaxonMessageProducerInterface $taxonMessageProducer,
-        TaxonRepositoryInterface $taxonRepository
+        private EntityManagerInterface $entityManager,
+        private TaxonMessageProducerInterface $taxonMessageProducer,
+        private TaxonRepositoryInterface $taxonRepository,
     ) {
         parent::__construct($entityManager);
-
-        $this->entityManager = $entityManager;
-        $this->taxonMessageProducer = $taxonMessageProducer;
-        $this->taxonRepository = $taxonRepository;
     }
 
     protected function configure(): void

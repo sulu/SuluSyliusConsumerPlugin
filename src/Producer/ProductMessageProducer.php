@@ -33,7 +33,7 @@ class ProductMessageProducer implements ProductMessageProducerInterface
 
     public function __construct(
         ProductSerializerInterface $productSerializer,
-        MessageBusInterface $messageBus
+        MessageBusInterface $messageBus,
     ) {
         $this->productSerializer = $productSerializer;
         $this->messageBus = $messageBus;
